@@ -25,3 +25,5 @@ jobs:
             "${{ secrets.FIREBASE_SERVICE_ACCOUNT_MENU_ANCHOR }}"
           channelId: live
           projectId: menu-anchor
+        env:
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
