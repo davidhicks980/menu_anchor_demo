@@ -1,7 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:raw_menu_anchor_web/aliased_border.dart';
+import 'package:raw_menu_anchor_web/raw_menu_anchor.0.dart';
+import 'package:raw_menu_anchor_web/raw_menu_anchor.1.dart';
+import 'package:raw_menu_anchor_web/raw_menu_anchor.2.dart';
+import 'package:raw_menu_anchor_web/raw_menu_anchor.3.dart';
 
 /// Flutter code sample for [NavigationDrawer].
 
@@ -17,11 +20,13 @@ class ExampleDestination {
 
 const List<ExampleDestination> destinations = <ExampleDestination>[
   ExampleDestination(
-      'Messages', Icon(Icons.widgets_outlined), Icon(Icons.widgets)),
+      'Simple Menu', Icon(Icons.list_rounded), Icon(Icons.list_rounded)),
   ExampleDestination(
-      'Profile', Icon(Icons.format_paint_outlined), Icon(Icons.format_paint)),
+      'Context Menu', Icon(Icons.mouse_outlined), Icon(Icons.mouse_rounded)),
   ExampleDestination(
-      'Settings', Icon(Icons.settings_outlined), Icon(Icons.settings)),
+      'Overlay Builder', Icon(Icons.settings_outlined), Icon(Icons.settings)),
+  ExampleDestination('Node (MenuBar)', Icon(Icons.fluorescent_outlined),
+      Icon(Icons.fluorescent_rounded)),
 ];
 
 class NavigationDrawerApp extends StatelessWidget {
@@ -30,18 +35,13 @@ class NavigationDrawerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode: ThemeMode.dark,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 0, 119, 255),
         ),
         splashFactory: InkSparkle.splashFactory,
-        navigationBarTheme: NavigationBarThemeData(elevation: 0),
-        visualDensity: VisualDensity(
-          vertical: VisualDensity.minimumDensity,
-          horizontal: VisualDensity.minimumDensity,
-        ),
-        useMaterial3: false,
+        navigationDrawerTheme: NavigationDrawerThemeData(tileHeight: 36),
+        useMaterial3: true,
       ),
       home: const NavigationDrawerExample(),
     );
@@ -56,13 +56,46 @@ class NavigationDrawerExample extends StatefulWidget {
       _NavigationDrawerExampleState();
 }
 
-class _NavigationDrawerExampleState extends State<NavigationDrawerExample> {
+class _NavigationDrawerExampleState extends State<NavigationDrawerExample>
+    with SingleTickerProviderStateMixin {
+  static const borderColor = Color.fromARGB(255, 121, 121, 121);
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  late AnimationController controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    if (showNavigationDrawer) {
+      controller.reverse();
+    } else {
+      controller.forward();
+    }
+    animation = Tween<double>(begin: 0.0, end: 1.0).animate(controller);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   int screenIndex = 0;
   bool showNavigationDrawer = false;
   bool disposeNavigationDrawer = false;
-  static const borderColor = Color(0xFF9A9A9A);
+  Widget get screen {
+    return switch (screenIndex) {
+      0 => SimpleMenuExample(),
+      1 => ContextMenuApp(),
+      2 => MenuOverlayBuilderApp(),
+      3 => MenuNodeApp(),
+      _ => SimpleMenuExample(),
+    };
+  }
 
   void handleScreenChanged(int selectedScreen) {
     setState(() {
@@ -74,6 +107,11 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample> {
     setState(() {
       showNavigationDrawer = !showNavigationDrawer;
     });
+    if (!showNavigationDrawer) {
+      controller.forward();
+    } else {
+      controller.reverse();
+    }
   }
 
   @override
@@ -87,9 +125,25 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample> {
           child: Stack(
             fit: StackFit.expand,
             children: [
+              Builder(builder: (context) {
+                final width = MediaQuery.sizeOf(context).width;
+                final offset = showNavigationDrawer ? 250.0 : 50.0;
+                return AnimatedPositioned(
+                  duration: const Duration(milliseconds: 800),
+                  left: offset,
+                  width: width - offset,
+                  top: 0,
+                  bottom: 0,
+                  curve: Curves.easeOutQuint,
+                  child: Stack(
+                    alignment: AlignmentDirectional.topStart,
+                    children: <Widget>[screen],
+                  ),
+                );
+              }),
               AnimatedPositioned(
-                left: showNavigationDrawer ? 0 : -100,
-                width: showNavigationDrawer ? 304 : 0,
+                left: showNavigationDrawer ? -50 : -250,
+                width: 300,
                 top: 0,
                 bottom: 0,
                 duration: const Duration(milliseconds: 800),
@@ -108,38 +162,89 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample> {
                     child: OverflowBox(
                       alignment: AlignmentDirectional.topStart,
                       fit: OverflowBoxFit.deferToChild,
-                      maxWidth: 304,
+                      maxWidth: 300,
                       minWidth: 0,
-                      child: NavigationDrawer(
-                        elevation: 0,
-                        onDestinationSelected: handleScreenChanged,
-                        selectedIndex: screenIndex,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-                            child: Text(
-                              'Examples',
-                              style: Theme.of(context).textTheme.titleMedium,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            bottom: 0,
+                            left: 0,
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: 800),
+                              curve: Curves.easeOutQuint,
+                              opacity: showNavigationDrawer ? 1 : 0,
+                              child: NavigationDrawer(
+                                onDestinationSelected: handleScreenChanged,
+                                selectedIndex: screenIndex,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        64, 16, 16, 10),
+                                    child: Text(
+                                      'Examples',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                    ),
+                                  ),
+                                  ...destinations.map(
+                                    (ExampleDestination destination) {
+                                      return NavigationDrawerDestination(
+                                        backgroundColor: Colors.transparent,
+                                        label: Text(destination.label),
+                                        icon: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 36),
+                                          child: destination.icon,
+                                        ),
+                                        selectedIcon: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 36),
+                                            child: destination.selectedIcon),
+                                      );
+                                    },
+                                  ),
+                                  const Padding(
+                                    padding:
+                                        EdgeInsets.fromLTRB(70, 16, 28, 10),
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        border: AliasedBorder(
+                                          bottom: BorderSide(
+                                            color: borderColor,
+                                            width: 0.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          ...destinations.map(
-                            (ExampleDestination destination) {
-                              return NavigationDrawerDestination(
-                                label: Text(destination.label),
-                                icon: destination.icon,
-                                selectedIcon: destination.selectedIcon,
-                              );
-                            },
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                border: AliasedBorder(
-                                  bottom: BorderSide(
-                                    color: borderColor,
-                                    width: 0.5,
-                                  ),
+                          Positioned(
+                            top: 0,
+                            height: 50,
+                            width: 50,
+                            right: 0,
+                            child: Center(
+                              child: IconButton(
+                                iconSize: 24,
+                                constraints:
+                                    BoxConstraints.tight(const Size(56, 56)),
+                                onPressed: toggleDrawer,
+                                visualDensity: VisualDensity.compact,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                icon: Icon(
+                                  showNavigationDrawer
+                                      ? Icons.menu_open_rounded
+                                      : Icons.menu_rounded,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                 ),
                               ),
                             ),
@@ -150,109 +255,10 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample> {
                   ),
                 ),
               ),
-              Builder(builder: (context) {
-                final width = MediaQuery.sizeOf(context).width;
-                final offset = showNavigationDrawer ? 304.0 : 0.0;
-                return AnimatedPositioned(
-                  duration: const Duration(milliseconds: 800),
-                  left: offset,
-                  width: width - offset,
-                  curve: Curves.easeOutQuint,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text('Page Index = $screenIndex'),
-                      ElevatedButton(
-                        onPressed: toggleDrawer,
-                        child: const Text('Open Drawer'),
-                      ),
-                    ],
-                  ),
-                );
-              }),
             ],
           ),
         ),
       ),
     );
-  }
-}
-
-class AliasedLine extends StatelessWidget {
-  const AliasedLine({
-    super.key,
-    required this.border,
-    required this.begin,
-    required this.end,
-    required this.overlayColor,
-    this.antiAlias = false,
-    this.offset = Offset.zero,
-  });
-
-  final BorderSide border;
-  final Alignment begin;
-  final Alignment end;
-  final Color overlayColor;
-  final bool antiAlias;
-  final Offset offset;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _AliasedLinePainter(
-        border: border,
-        begin: begin,
-        end: end,
-        overlayColor: overlayColor,
-        antiAlias: antiAlias,
-        offset: offset,
-      ),
-    );
-  }
-}
-
-class _AliasedLinePainter extends CustomPainter {
-  const _AliasedLinePainter({
-    required this.border,
-    required this.begin,
-    required this.end,
-    required this.overlayColor,
-    this.antiAlias = false,
-    this.offset = Offset.zero,
-  });
-
-  final BorderSide border;
-  final Alignment begin;
-  final Alignment end;
-  final Color overlayColor;
-  final bool antiAlias;
-  final Offset offset;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Offset p1 = begin.alongSize(size) + offset;
-    final Offset p2 = end.alongSize(size) + offset;
-
-    // BlendMode.overlay is not supported on the web.
-    if (!kIsWeb) {
-      final Paint overlayPainter = border.toPaint()
-        ..color = overlayColor
-        ..isAntiAlias = antiAlias
-        ..blendMode = BlendMode.overlay;
-      canvas.drawLine(p1, p2, overlayPainter);
-    }
-
-    final Paint colorPainter = border.toPaint()..isAntiAlias = antiAlias;
-    canvas.drawLine(p1, p2, colorPainter);
-  }
-
-  @override
-  bool shouldRepaint(_AliasedLinePainter oldDelegate) {
-    return end != oldDelegate.end ||
-        begin != oldDelegate.begin ||
-        border != oldDelegate.border ||
-        offset != oldDelegate.offset ||
-        antiAlias != oldDelegate.antiAlias ||
-        overlayColor != oldDelegate.overlayColor;
   }
 }
