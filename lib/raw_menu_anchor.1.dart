@@ -11,14 +11,14 @@ import 'raw_menu_anchor.dart';
 /// Flutter code sample for a [CupertinoMenuAnchor] that shows a basic menu.
 // void main() => runApp(const CupertinoSimpleMenuApp());
 
-class ContextMenuExample extends StatefulWidget {
-  const ContextMenuExample({super.key});
+class _ContextMenuExample extends StatefulWidget {
+  const _ContextMenuExample({super.key});
 
   @override
-  State<ContextMenuExample> createState() => _ContextMenuExampleState();
+  State<_ContextMenuExample> createState() => _ContextMenuExampleState();
 }
 
-class _ContextMenuExampleState extends State<ContextMenuExample> {
+class _ContextMenuExampleState extends State<_ContextMenuExample> {
   final MenuController controller = MenuController();
   bool _menuWasEnabled = false;
 
@@ -146,13 +146,13 @@ class _ContextMenuExampleState extends State<ContextMenuExample> {
           },
         )
       ],
-      child: const NestedWidget(),
+      child: const _NestedWidget(),
     );
   }
 }
 
-class NestedWidget extends StatelessWidget {
-  const NestedWidget({super.key});
+class _NestedWidget extends StatelessWidget {
+  const _NestedWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -185,8 +185,8 @@ class NestedWidget extends StatelessWidget {
   }
 }
 
-class ContextMenuApp extends StatelessWidget {
-  const ContextMenuApp({super.key});
+class ContextMenuExample extends StatelessWidget {
+  const ContextMenuExample({super.key});
 
   static const ButtonStyle menuButtonStyle = ButtonStyle(
     splashFactory: InkSparkle.splashFactory,
@@ -206,7 +206,7 @@ class ContextMenuApp extends StatelessWidget {
       data: Theme.of(context).copyWith(
         menuButtonTheme: const MenuButtonThemeData(style: menuButtonStyle),
       ),
-      child: const Scaffold(body: ContextMenuExample()),
+      child: const Scaffold(body: _ContextMenuExample()),
     );
   }
 }

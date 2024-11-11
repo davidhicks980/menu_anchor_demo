@@ -30,14 +30,16 @@ const List<MenuItem> menuItems = <MenuItem>[
   MenuItem('Dog', leading: Text('🐕')),
 ];
 
-class MenuExample extends StatefulWidget {
-  const MenuExample({super.key});
+class _MenuOverlayBuilderExample extends StatefulWidget {
+  const _MenuOverlayBuilderExample({super.key});
 
   @override
-  State<MenuExample> createState() => _MenuExampleState();
+  State<_MenuOverlayBuilderExample> createState() =>
+      _MenuOverlayBuilderExampleState();
 }
 
-class _MenuExampleState extends State<MenuExample> {
+class _MenuOverlayBuilderExampleState
+    extends State<_MenuOverlayBuilderExample> {
   static const double menuItemExtent = 44.0;
 
   final MenuController controller = MenuController();
@@ -256,7 +258,7 @@ class MenuOverlayBuilderApp extends StatelessWidget {
         filledButtonTheme: const FilledButtonThemeData(style: buttonStyle),
         menuButtonTheme: const MenuButtonThemeData(style: buttonStyle),
       ),
-      child: const MenuExample(),
+      child: const _MenuOverlayBuilderExample(),
     );
   }
 }

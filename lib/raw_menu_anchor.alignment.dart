@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide MenuController;
 
 import 'button.dart';
 import 'development_template.dart';
@@ -39,7 +39,7 @@ List<Widget> buildChildren(
           return ColoredBox(
             color: controller.isOpen
                 ? const ui.Color.fromARGB(30, 255, 255, 255)
-                : const Color(0x00000000),
+                : const ui.Color.fromARGB(26, 0, 0, 0),
             child: Button(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,12 +65,16 @@ List<Widget> buildChildren(
   return children;
 }
 
-class AlignmentApp extends StatelessWidget {
-  const AlignmentApp({super.key});
+class AlignmentExample extends StatelessWidget {
+  const AlignmentExample({super.key});
 
   @override
   Widget build(BuildContext context) {
     kMenuDebugLayout = true;
-    return DevelopmentTemplate(buildChildren: buildChildren);
+    return DevelopmentTemplate(
+      buildChildren: buildChildren,
+      title:
+          Text('Alignment Example', style: TextTheme.of(context).headlineLarge),
+    );
   }
 }

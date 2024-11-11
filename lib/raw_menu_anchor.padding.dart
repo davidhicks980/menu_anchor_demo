@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' hide MenuController;
 import 'package:raw_menu_anchor_web/development_template.dart';
 
 import 'button.dart';
@@ -32,8 +32,11 @@ List<Widget> buildChildren(
           color: const ui.Color.fromARGB(255, 0, 8, 255),
         )
       ],
-      builder:
-          (BuildContext context, MenuController controller, Widget? child) {
+      builder: (
+        BuildContext context,
+        MenuController controller,
+        Widget? child,
+      ) {
         return ColoredBox(
           color: controller.isOpen
               ? const ui.Color.fromARGB(30, 255, 255, 255)
@@ -62,12 +65,18 @@ List<Widget> buildChildren(
   return children;
 }
 
-class PaddingApp extends StatelessWidget {
-  const PaddingApp({super.key});
+class PaddingExample extends StatelessWidget {
+  const PaddingExample({super.key});
 
   @override
   Widget build(BuildContext context) {
     kMenuDebugLayout = true;
-    return DevelopmentTemplate(buildChildren: buildChildren);
+    return DevelopmentTemplate(
+      buildChildren: buildChildren,
+      title: Text(
+        'Padding Example',
+        style: TextTheme.of(context).headlineLarge!,
+      ),
+    );
   }
 }

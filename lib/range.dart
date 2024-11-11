@@ -439,7 +439,6 @@ class _RenderRange extends RenderConstrainedBox
         );
       } catch (e) {
         assert(() {
-          print(e);
           return true;
         }());
         return;

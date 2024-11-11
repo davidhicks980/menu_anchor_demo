@@ -10,14 +10,14 @@ import 'raw_menu_anchor.dart';
 /// Flutter code sample for a [CupertinoMenuAnchor] that shows a basic menu.
 // void main() => runApp(const CupertinoSimpleMenuApp());
 
-class SimpleMenuExample extends StatefulWidget {
-  const SimpleMenuExample({super.key});
+class _SimpleMenuExample extends StatefulWidget {
+  const _SimpleMenuExample({super.key});
 
   @override
-  State<SimpleMenuExample> createState() => _SimpleMenuExampleState();
+  State<_SimpleMenuExample> createState() => _SimpleMenuExampleState();
 }
 
-class _SimpleMenuExampleState extends State<SimpleMenuExample> {
+class _SimpleMenuExampleState extends State<_SimpleMenuExample> {
   final MenuController controller = MenuController();
 
   String _selected = '';
@@ -83,8 +83,8 @@ class _SimpleMenuExampleState extends State<SimpleMenuExample> {
   }
 }
 
-class SimpleMenuApp extends StatelessWidget {
-  const SimpleMenuApp({super.key});
+class SimpleMenuExample extends StatelessWidget {
+  const SimpleMenuExample({super.key});
 
   static const ButtonStyle menuButtonStyle = ButtonStyle(
     splashFactory: InkSparkle.splashFactory,
@@ -104,7 +104,7 @@ class SimpleMenuApp extends StatelessWidget {
       data: Theme.of(context).copyWith(
         menuButtonTheme: const MenuButtonThemeData(style: menuButtonStyle),
       ),
-      child: const SimpleMenuExample(),
+      child: const _SimpleMenuExample(),
     );
   }
 }

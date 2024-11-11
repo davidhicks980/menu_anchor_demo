@@ -6,6 +6,8 @@ import 'package:raw_menu_anchor_web/raw_menu_anchor.1.dart';
 import 'package:raw_menu_anchor_web/raw_menu_anchor.2.dart';
 import 'package:raw_menu_anchor_web/raw_menu_anchor.3.dart';
 
+import 'dropdown_menu.0.dart';
+import 'menu_anchor.0.dart';
 import 'raw_menu_anchor.alignment.dart';
 import 'raw_menu_anchor.padding.dart';
 
@@ -48,6 +50,18 @@ enum Destination {
     icon: Icon(Icons.padding_outlined),
     selectedIcon: Icon(Icons.padding_rounded),
     isDevelopment: true,
+  ),
+  menuAnchor(
+    "Menu Anchor",
+    icon: Icon(Icons.anchor_outlined),
+    selectedIcon: Icon(Icons.anchor_rounded),
+    isDevelopment: true,
+  ),
+  dropdownMenu(
+    "Dropdown Menu",
+    icon: Icon(Icons.arrow_drop_down_circle_outlined),
+    selectedIcon: Icon(Icons.arrow_drop_down_circle_rounded),
+    isDevelopment: true,
   );
 
   const Destination(
@@ -65,7 +79,6 @@ enum Destination {
       "/${label.toLowerCase().replaceAll(r'\W', "").replaceAll(' ', '_')}";
   static Destination? findByRoute(String route) {
     for (final value in Destination.values) {
-      print((value, route));
       if (value.route == route) {
         return value;
       }
@@ -144,14 +157,16 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
           ),
           routes: {
             Destination.simpleMenu.route: _page(const SimpleMenuExample()),
-            Destination.contextMenu.route: _page(const ContextMenuApp()),
+            Destination.contextMenu.route: _page(const ContextMenuExample()),
             Destination.overlayBuilder.route:
                 _page(const MenuOverlayBuilderApp()),
-            Destination.nodeMenu.route: _page(const MenuNodeApp()),
-            Destination.alignment.route: _page(const AlignmentApp()),
-            Destination.padding.route: _page(const PaddingApp()),
+            Destination.nodeMenu.route: _page(const MenuNodeExample()),
+            Destination.alignment.route: _page(const AlignmentExample()),
+            Destination.padding.route: _page(const PaddingExample()),
+            Destination.menuAnchor.route: _page(const MenuAnchorExample()),
+            Destination.dropdownMenu.route: _page(const DropdownMenuExample()),
           },
-          home: _page(SimpleMenuApp())(context),
+          home: _page(SimpleMenuExample())(context),
         ));
     return Builder(builder: (context) {
       return MediaQuery(

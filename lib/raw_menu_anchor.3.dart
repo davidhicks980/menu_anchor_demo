@@ -48,14 +48,14 @@ const List<MenuItem> options = <MenuItem>[
   ]),
 ];
 
-class MenuNodeExample extends StatefulWidget {
-  const MenuNodeExample({super.key});
+class _MenuNodeExample extends StatefulWidget {
+  const _MenuNodeExample({super.key});
 
   @override
-  State<MenuNodeExample> createState() => _MenuNodeExampleState();
+  State<_MenuNodeExample> createState() => _MenuNodeExampleState();
 }
 
-class _MenuNodeExampleState extends State<MenuNodeExample> {
+class _MenuNodeExampleState extends State<_MenuNodeExample> {
   final MenuController controller = MenuController();
   String _selected = '';
 
@@ -145,8 +145,8 @@ class _MenuNodeExampleState extends State<MenuNodeExample> {
   }
 }
 
-class MenuNodeApp extends StatelessWidget {
-  const MenuNodeApp({super.key});
+class MenuNodeExample extends StatelessWidget {
+  const MenuNodeExample({super.key});
 
   static const ButtonStyle menuButtonStyle = ButtonStyle(
     splashFactory: InkSparkle.splashFactory,
@@ -166,7 +166,7 @@ class MenuNodeApp extends StatelessWidget {
       data: Theme.of(context).copyWith(
         menuButtonTheme: const MenuButtonThemeData(style: menuButtonStyle),
       ),
-      child: const MenuNodeExample(),
+      child: const _MenuNodeExample(),
     );
   }
 }
