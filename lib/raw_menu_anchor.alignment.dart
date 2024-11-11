@@ -73,8 +73,13 @@ class AlignmentExample extends StatelessWidget {
     kMenuDebugLayout = true;
     return DevelopmentTemplate(
       buildChildren: buildChildren,
-      title:
-          Text('Alignment Example', style: TextTheme.of(context).headlineLarge),
+      title: Padding(
+        padding: EdgeInsets.only(bottom: 20),
+        child: Text(
+          'Alignment Example',
+          style: TextTheme.of(context).headlineLarge,
+        ),
+      ),
     );
   }
 }

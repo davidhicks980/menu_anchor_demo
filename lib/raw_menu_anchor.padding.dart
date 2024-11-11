@@ -73,9 +73,12 @@ class PaddingExample extends StatelessWidget {
     kMenuDebugLayout = true;
     return DevelopmentTemplate(
       buildChildren: buildChildren,
-      title: Text(
-        'Padding Example',
-        style: TextTheme.of(context).headlineLarge!,
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: Text(
+          'Padding Example',
+          style: TextTheme.of(context).headlineLarge!,
+        ),
       ),
     );
   }
