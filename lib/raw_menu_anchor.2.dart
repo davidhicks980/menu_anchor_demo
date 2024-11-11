@@ -97,7 +97,7 @@ class _MenuExampleState extends State<MenuExample> {
               Widget? child,
             ) {
               return SizedBox(
-                width: 168,
+                width: 160,
                 child: FilledButton(
                   onPressed: () {
                     if (controller.isOpen) {
@@ -196,8 +196,8 @@ class ItemAwareMenuSurface extends StatelessWidget {
                 ) {
                   return Transform(
                     transform: Matrix4.identity()
-                      ..scale(1, value)
-                      ..translate(0, 24 * (1 - value)),
+                      ..scale(1.0, value)
+                      ..translate(0.0, 24.0 * (1 - value)),
                     alignment: alignment,
                     child: Opacity(
                       opacity: ui.clampDouble(value, 0, 1),
@@ -245,15 +245,15 @@ class MenuOverlayBuilderApp extends StatelessWidget {
     overlayColor: WidgetStatePropertyAll<Color>(ui.Color(0x1D82B0FF)),
     textStyle: WidgetStatePropertyAll<TextStyle>(TextStyle(fontSize: 15)),
     padding: WidgetStatePropertyAll<EdgeInsets>(
-        EdgeInsets.symmetric(horizontal: 12)),
-    shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
-        RoundedRectangleBorder()),
+        EdgeInsets.symmetric(horizontal: 14)),
   );
 
   @override
   Widget build(BuildContext context) {
+    kMenuDebugLayout = false;
     return Theme(
       data: Theme.of(context).copyWith(
+        filledButtonTheme: const FilledButtonThemeData(style: buttonStyle),
         menuButtonTheme: const MenuButtonThemeData(style: buttonStyle),
       ),
       child: const MenuExample(),

@@ -31,6 +31,7 @@ class _SimpleMenuExampleState extends State<SimpleMenuExample> {
 
   @override
   Widget build(BuildContext context) {
+    kMenuDebugLayout = false;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,7 +43,6 @@ class _SimpleMenuExampleState extends State<SimpleMenuExample> {
             constraints: const BoxConstraints(minWidth: 120),
             padding: const EdgeInsets.symmetric(vertical: 5),
             alignmentOffset: const Offset(0, 6),
-            surfaceDecoration: RawMenuAnchor.defaultLightOverlayDecoration,
             menuChildren: <Widget>[
               MenuItemButton(
                   onPressed: () {
@@ -89,10 +89,8 @@ class SimpleMenuApp extends StatelessWidget {
   static const ButtonStyle menuButtonStyle = ButtonStyle(
     splashFactory: InkSparkle.splashFactory,
     iconSize: WidgetStatePropertyAll<double>(17),
-    overlayColor: WidgetStatePropertyAll<Color>(Color(0x0D1A1A1A)),
     padding: WidgetStatePropertyAll<EdgeInsets>(
         EdgeInsets.symmetric(horizontal: 12)),
-    textStyle: WidgetStatePropertyAll<TextStyle>(TextStyle(fontSize: 14)),
     visualDensity: VisualDensity(
       horizontal: VisualDensity.minimumDensity,
       vertical: VisualDensity.minimumDensity,
@@ -101,6 +99,7 @@ class SimpleMenuApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    kMenuDebugLayout = false;
     return Theme(
       data: Theme.of(context).copyWith(
         menuButtonTheme: const MenuButtonThemeData(style: menuButtonStyle),

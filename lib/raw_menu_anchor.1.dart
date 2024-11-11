@@ -66,7 +66,6 @@ class _ContextMenuExampleState extends State<ContextMenuExample> {
       constraints: const BoxConstraints(minWidth: 180),
       padding: const EdgeInsets.symmetric(vertical: 5),
       alignmentOffset: const Offset(0, 6),
-      surfaceDecoration: RawMenuAnchor.defaultLightOverlayDecoration,
       menuChildren: <Widget>[
         MenuItemButton(
           autofocus: true,
@@ -100,7 +99,6 @@ class _ContextMenuExampleState extends State<ContextMenuExample> {
           padding: const EdgeInsetsDirectional.symmetric(vertical: 5),
           alignmentOffset: const Offset(-4, 0),
           constraints: const BoxConstraints(minWidth: 180),
-          surfaceDecoration: RawMenuAnchor.defaultLightOverlayDecoration,
           menuChildren: [
             MenuItemButton(
               onPressed: _handlePressed,
@@ -193,10 +191,8 @@ class ContextMenuApp extends StatelessWidget {
   static const ButtonStyle menuButtonStyle = ButtonStyle(
     splashFactory: InkSparkle.splashFactory,
     iconSize: WidgetStatePropertyAll<double>(17),
-    overlayColor: WidgetStatePropertyAll<Color>(Color(0x12262627)),
     padding: WidgetStatePropertyAll<EdgeInsets>(
         EdgeInsets.symmetric(horizontal: 12)),
-    textStyle: WidgetStatePropertyAll<TextStyle>(TextStyle(fontSize: 14)),
     visualDensity: VisualDensity(
       horizontal: VisualDensity.minimumDensity,
       vertical: VisualDensity.minimumDensity,
@@ -205,6 +201,7 @@ class ContextMenuApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    kMenuDebugLayout = false;
     return Theme(
       data: Theme.of(context).copyWith(
         menuButtonTheme: const MenuButtonThemeData(style: menuButtonStyle),
