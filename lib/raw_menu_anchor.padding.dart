@@ -26,11 +26,16 @@ List<Widget> buildChildren(
         border: Border.fromBorderSide(BorderSide(color: Color(0x63000000))),
       ),
       menuChildren: [
-        Container(
-          height: 50,
-          width: 50,
-          color: const ui.Color.fromARGB(255, 0, 8, 255),
-        )
+        for (int index = 0; index < 4; index++)
+          DecoratedBox(
+            decoration:
+                (RawMenuAnchor.defaultLightOverlayDecoration as BoxDecoration)
+                    .copyWith(borderRadius: BorderRadius.zero, boxShadow: []),
+            child: Button.text(
+              "Sub" * (depth + 1) + 'menu Item $depth.${index + 1}',
+              constraints: const BoxConstraints(maxHeight: 30),
+            ),
+          ),
       ],
       builder: (
         BuildContext context,
@@ -39,7 +44,9 @@ List<Widget> buildChildren(
       ) {
         return ColoredBox(
           color: controller.isOpen
-              ? const ui.Color.fromARGB(30, 255, 255, 255)
+              ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                  ? const Color(0x0DFFFFFF)
+                  : const ui.Color.fromARGB(49, 26, 26, 26)
               : const Color(0x00000000),
           child: Button(
             Row(

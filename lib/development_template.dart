@@ -127,9 +127,6 @@ class _DevelopmentTemplateState extends State<DevelopmentTemplate> {
               ),
               child: RawMenuAnchor(
                 controller: controller,
-                alignment: anchorAlignment,
-                menuAlignment: menuAlignment,
-                alignmentOffset: offset,
                 menuChildren: widget.buildChildren(
                   anchorAlignment,
                   menuAlignment,

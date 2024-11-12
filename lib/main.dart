@@ -340,7 +340,10 @@ class _Drawer extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(64, 16, 16, 10),
                 child: Text(
                   'Examples',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(fontWeight: FontWeight.w800, fontSize: 24),
                 ),
               ),
               Padding(
