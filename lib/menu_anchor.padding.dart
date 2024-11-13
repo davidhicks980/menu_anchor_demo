@@ -1,18 +1,17 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter/material.dart' hide MenuController;
-import 'package:raw_menu_anchor_web/raw_menu_anchor_template.dart';
+import 'package:flutter/material.dart';
 
 import 'button.dart';
-import 'raw_menu_anchor.dart';
+// import 'menu_anchor.dart';
+import 'menu_anchor_template.dart';
+import 'raw_menu_anchor.dart' hide MenuController;
+// import 'raw_menu_anchor.dart';
 
 List<Widget> buildChildren(
-  BuildContext context,
   AlignmentGeometry anchorAlignment,
-  AlignmentGeometry menuAlignment,
   Offset alignmentOffset,
 ) {
-  final darkMode = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
   final depth = 0;
   final children = <Widget>[
     for (int index = 0; index < 4; index++)
@@ -20,25 +19,23 @@ List<Widget> buildChildren(
         "Sub" * depth + 'menu Item $depth.$index',
         constraints: const BoxConstraints(maxHeight: 30),
       ),
-    RawMenuAnchor(
-      alignment: anchorAlignment,
+    MenuAnchor(
       alignmentOffset: alignmentOffset,
-      menuAlignment: menuAlignment,
-      constraints: BoxConstraints(minWidth: 125),
-      padding: const EdgeInsetsDirectional.fromSTEB(33, 45, 15, 27),
-      surfaceDecoration: const BoxDecoration(
-        color: ui.Color.fromARGB(87, 255, 0, 247),
-        border: Border.fromBorderSide(BorderSide(color: Color(0x63000000))),
+      style: MenuStyle(
+        alignment: anchorAlignment,
+        padding: WidgetStatePropertyAll(
+          EdgeInsets.fromLTRB(33, 45, 15, 27),
+        ),
+        backgroundColor: WidgetStatePropertyAll(
+          ui.Color.fromARGB(87, 255, 0, 247),
+        ),
       ),
       menuChildren: [
         for (int index = 0; index < 4; index++)
           DecoratedBox(
-            decoration: (darkMode
-                    ? RawMenuAnchor.defaultDarkOverlayDecoration
-                        as BoxDecoration
-                    : RawMenuAnchor.defaultLightOverlayDecoration
-                        as BoxDecoration)
-                .copyWith(borderRadius: BorderRadius.zero, boxShadow: []),
+            decoration:
+                (RawMenuAnchor.defaultLightOverlayDecoration as BoxDecoration)
+                    .copyWith(borderRadius: BorderRadius.zero, boxShadow: []),
             child: Button.text(
               "Sub" * (depth + 1) + 'menu Item $depth.${index + 1}',
               constraints: const BoxConstraints(maxHeight: 30),
@@ -80,13 +77,12 @@ List<Widget> buildChildren(
   return children;
 }
 
-class PaddingExample extends StatelessWidget {
-  const PaddingExample({super.key});
+class MenuAnchorPaddingBugExample extends StatelessWidget {
+  const MenuAnchorPaddingBugExample({super.key});
 
   @override
   Widget build(BuildContext context) {
-    kMenuDebugLayout = true;
-    return DevelopmentTemplate(
+    return MenuAnchorDevelopmentTemplate(
       buildChildren: buildChildren,
       title: Padding(
         padding: const EdgeInsets.only(bottom: 20.0),

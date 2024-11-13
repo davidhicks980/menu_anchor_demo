@@ -3507,21 +3507,22 @@ class _Submenu extends StatelessWidget {
         constraints: BoxConstraints.loose(position.overlaySize),
         child: Builder(builder: (BuildContext context) {
           return CustomSingleChildLayout(
-              delegate: _MenuLayout(
-                anchorRect: anchorRect,
-                textDirection: textDirection,
-                avoidBounds:
-                    DisplayFeatureSubScreen.avoidBounds(MediaQuery.of(context))
-                        .toSet(),
-                menuPadding: resolvedPadding,
-                alignment: alignment,
-                alignmentOffset: alignmentOffset,
-                menuPosition: position.position,
-                orientation: anchor._orientation,
-                parentOrientation:
-                    anchor._parent?._orientation ?? Axis.horizontal,
-              ),
-              child: body);
+            delegate: _MenuLayout(
+              anchorRect: anchorRect,
+              textDirection: textDirection,
+              avoidBounds:
+                  DisplayFeatureSubScreen.avoidBounds(MediaQuery.of(context))
+                      .toSet(),
+              menuPadding: resolvedPadding,
+              alignment: alignment,
+              alignmentOffset: alignmentOffset,
+              menuPosition: position.position,
+              orientation: anchor._orientation,
+              parentOrientation:
+                  anchor._parent?._orientation ?? Axis.horizontal,
+            ),
+            child: body,
+          );
         }),
       ),
     );

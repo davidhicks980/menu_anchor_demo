@@ -8,6 +8,7 @@ import 'package:raw_menu_anchor_web/raw_menu_anchor.3.dart';
 
 import 'dropdown_menu.0.dart';
 import 'menu_anchor.0.dart';
+import 'menu_anchor.padding.dart';
 import 'raw_menu_anchor.alignment.dart';
 import 'raw_menu_anchor.padding.dart';
 
@@ -53,6 +54,12 @@ enum Destination {
   ),
   menuAnchor(
     "Menu Anchor",
+    icon: Icon(Icons.anchor_outlined),
+    selectedIcon: Icon(Icons.anchor_rounded),
+    isDevelopment: true,
+  ),
+  menuAnchorPaddingBug(
+    "Menu Anchor Padding Bug",
     icon: Icon(Icons.anchor_outlined),
     selectedIcon: Icon(Icons.anchor_rounded),
     isDevelopment: true,
@@ -164,6 +171,8 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
             Destination.alignment.route: _page(const AlignmentExample()),
             Destination.padding.route: _page(const PaddingExample()),
             Destination.menuAnchor.route: _page(const MenuAnchorExample()),
+            Destination.menuAnchorPaddingBug.route:
+                _page(const MenuAnchorPaddingBugExample()),
             Destination.dropdownMenu.route: _page(const DropdownMenuExample()),
           },
           home: _page(SimpleMenuExample())(context),
