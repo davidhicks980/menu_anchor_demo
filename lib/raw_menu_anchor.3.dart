@@ -98,9 +98,12 @@ class _MenuNodeExampleState extends State<_MenuNodeExample> {
                   ? const Color(0x0D1A1A1A)
                   : Colors.transparent,
               child: MenuItemButton(
+                onHover: (bool isHovering) {
+                  if (isHovering) {
+                    controller.open();
+                  }
+                },
                 onPressed: () {
-                  print(
-                      'Pressed: ${controller.isOpen} ${DateTime.now().millisecondsSinceEpoch}');
                   if (controller.isOpen) {
                     controller.close();
                   } else {
