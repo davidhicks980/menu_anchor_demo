@@ -93,17 +93,6 @@ class _MenuNodeExampleState extends State<_MenuNodeExample> {
                   ? const Color(0x0D1A1A1A)
                   : Colors.transparent,
               child: MenuItemButton(
-                onFocusChange: (value) {
-                  print(
-                      'Focus: $value ${DateTime.now().millisecondsSinceEpoch}');
-                },
-                onHover: (bool value) {
-                  print(
-                      'Hover: $value ${DateTime.now().millisecondsSinceEpoch}');
-                  if (value) {
-                    controller.open();
-                  }
-                },
                 onPressed: () {
                   print(
                       'Pressed: ${controller.isOpen} ${DateTime.now().millisecondsSinceEpoch}');
