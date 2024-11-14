@@ -3,8 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart' hide MenuController;
 
 import 'button.dart';
-import 'raw_menu_anchor_template.dart';
 import 'raw_menu_anchor.dart';
+import 'raw_menu_anchor_template.dart';
 
 List<Widget> buildChildren(
   BuildContext context,
@@ -35,8 +35,11 @@ List<Widget> buildChildren(
         alignment: anchorAlignment,
         menuAlignment: menuAlignment,
         menuChildren: children,
-        builder:
-            (BuildContext context, MenuController controller, Widget? child) {
+        builder: (
+          BuildContext context,
+          MenuController controller,
+          Widget? child,
+        ) {
           return ColoredBox(
             color: controller.isOpen
                 ? const ui.Color.fromARGB(30, 255, 255, 255)

@@ -958,8 +958,11 @@ class _RawMenuAnchorOverlayState
         child: Builder(
           key: _anchorKey,
           builder: (BuildContext context) {
-            return widget.builder
-                    ?.call(context, _menuController, widget.child) ??
+            return widget.builder?.call(
+                  context,
+                  _menuController,
+                  widget.child,
+                ) ??
                 widget.child ??
                 const SizedBox();
           },
