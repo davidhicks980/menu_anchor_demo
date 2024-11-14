@@ -161,7 +161,6 @@ class _NestedWidget extends StatelessWidget {
     return GestureDetector(
       onLongPressStart: isMobile
           ? (details) {
-              print('onLongPressDown');
               MenuController.maybeOf(context)
                   ?.open(position: details.localPosition);
               HapticFeedback.heavyImpact();
@@ -169,9 +168,8 @@ class _NestedWidget extends StatelessWidget {
           : null,
       onSecondaryTapDown: !isMobile
           ? (TapDownDetails details) {
-              print('onSecondaryTapDown');
               MenuController.maybeOf(context)
-                  ?.open(position: details.globalPosition);
+                  ?.open(position: details.localPosition);
             }
           : null,
       onTapDown: (TapDownDetails details) {
