@@ -70,6 +70,11 @@ class _MenuNodeExampleState extends State<_MenuNodeExample> {
             _buildMenuItem(child, isSubmenu: true)
           else
             MenuItemButton(
+              onHover: (bool isHovering) {
+                if (isHovering) {
+                  controller.open();
+                }
+              },
               onPressed: () {
                 setState(() {
                   _selected = child.label;
