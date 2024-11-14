@@ -107,10 +107,15 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
   bool _isRTL = false;
   bool _isDarkMode = false;
   double _textScaleFactor = 1.0;
+  TextDirection get _textDirection =>
+      _isRTL ? TextDirection.rtl : TextDirection.ltr;
+  Brightness get _brightness =>
+      _isDarkMode ? Brightness.dark : Brightness.light;
+
   Widget Function(BuildContext) _page(Widget child) {
     return (context) {
       return Directionality(
-        textDirection: _isRTL ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: _textDirection,
         child: NavigationDrawerExample(
           settings: Settings(
             isRTL: _isRTL,
@@ -140,9 +145,8 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
 
   @override
   Widget build(BuildContext context) {
-    final brightness = _isDarkMode ? Brightness.dark : Brightness.light;
     final app = Directionality(
-        textDirection: _isRTL ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: _textDirection,
         child: MaterialApp(
           theme: ThemeData(
             fontFamily: "Inter",
@@ -159,7 +163,7 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
             ),
             colorScheme: ColorScheme.fromSeed(
               seedColor: const Color.fromARGB(255, 0, 119, 255),
-              brightness: _isDarkMode ? Brightness.dark : Brightness.light,
+              brightness: _brightness,
             ),
             splashFactory: InkSparkle.splashFactory,
             navigationDrawerTheme: NavigationDrawerThemeData(tileHeight: 36),
@@ -183,7 +187,7 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
       return MediaQuery(
         data: MediaQuery.of(context).copyWith(
           textScaler: TextScaler.linear(_textScaleFactor),
-          platformBrightness: _isDarkMode ? Brightness.dark : Brightness.light,
+          platformBrightness: _brightness,
         ),
         child: app,
       );

@@ -172,6 +172,7 @@ class _ButtonState extends State<Button> {
                 onHover: _handleHover,
                 onExit: _handleExit,
                 child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTapDown: _handleTapDown,
                   onTapCancel: _handleTapCancel,
                   onTapUp: _handleTapUp,

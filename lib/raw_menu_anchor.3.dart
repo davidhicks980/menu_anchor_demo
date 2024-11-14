@@ -135,7 +135,9 @@ class _MenuNodeExampleState extends State<_MenuNodeExample> {
               ],
               builder: (BuildContext context, List<Widget> menuChildren) {
                 return Row(
-                    mainAxisSize: MainAxisSize.min, children: menuChildren);
+                  mainAxisSize: MainAxisSize.min,
+                  children: menuChildren,
+                );
               },
             ),
           ),

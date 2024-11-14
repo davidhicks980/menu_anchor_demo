@@ -52,8 +52,8 @@ class RawMenuAnchorOverlayPosition {
 
   /// The `position` argument passed to [MenuController.open].
   ///
-  /// When defined, the `position` will override [RawMenuAnchor.alignmentOffset]
-  /// and [RawMenuAnchor.alignment].
+  /// The position describes the distance from the top-left corner
+  /// of the anchor that the menu should be positioned at.
   final Offset? position;
 
   /// The group ID of the tap region that should be used to consume taps outside
@@ -206,6 +206,22 @@ class _RawMenuAnchorScope extends InheritedWidget {
 /// ```
 /// {@end-tool}
 ///
+/// {@tool dartpad}
+/// This example uses a [RawMenuAnchor] to build a simple menu with three items.
+/// The "Edit" button opens and closes the menu when pressed. Selecting a menu
+/// item will close the menu and update the selected item text.
+///
+/// ** See code in examples/api/lib/widgets/raw_menu_anchor/raw_menu_anchor.0.dart **
+/// {@end-tool}
+///
+/// {@tool dartpad}
+/// This example uses a [RawMenuAnchor] to build a context menu with a nested
+/// submenu. Right-clicking the background opens and positions the context menu
+/// at the cursor. Selecting a menu item will close the menu and update the
+/// selected item text.
+///
+/// ** See code in examples/api/lib/widgets/raw_menu_anchor/raw_menu_anchor.1.dart **
+/// {@end-tool}
 ///
 class RawMenuAnchor extends StatelessWidget {
   /// Creates a [RawMenuAnchor].
@@ -241,7 +257,15 @@ class RawMenuAnchor extends StatelessWidget {
   /// appearance, semantics, and interaction of the menu overlay, in most cases
   /// the default overlay provided by [RawMenuAnchor] is sufficient. However, in
   /// cases where a custom overlay is needed (e.g. an animated menu), this
-  /// constructor can be used to provide one.
+  /// constructor can be used.
+  ///
+  /// {@tool dartpad}
+  /// This example uses a [RawMenuAnchor.overlayBuilder] to build an animated
+  /// select menu with four items. The menu opens with the last selected item
+  /// positioned above the anchor.
+  ///
+  /// ** See code in examples/api/lib/widgets/raw_menu_anchor/raw_menu_anchor.2.dart **
+  /// {@end-tool}
   const RawMenuAnchor.overlayBuilder({
     super.key,
     this.controller,
@@ -288,7 +312,7 @@ class RawMenuAnchor extends StatelessWidget {
   /// submenus.
   ///
   /// ```dart
-  /// RawMenuAnchor.menuPanel(
+  /// RawMenuAnchor.node(
   ///   builder: (BuildContext context, List<Widget> menuChildren) {
   ///     return Row(
   ///       mainAxisSize: MainAxisSize.min,
@@ -326,6 +350,15 @@ class RawMenuAnchor extends StatelessWidget {
   ///   ],
   /// );
   /// ```
+  /// {@end-tool}
+  ///
+  /// {@tool dartpad}
+  /// This example uses [RawMenuAnchor.node] to build a menu bar with four
+  /// submenus. Hovering over menu items opens their respective submenus.
+  /// Selecting a menu item will close the menu and update the selected item
+  /// text.
+  ///
+  /// ** See code in examples/api/lib/widgets/raw_menu_anchor/raw_menu_anchor.3.dart **
   /// {@end-tool}
   const RawMenuAnchor.node({
     super.key,
@@ -369,8 +402,8 @@ class RawMenuAnchor extends StatelessWidget {
   /// The [Decoration] that defines the visual attributes of the menu surface.
   ///
   /// Defaults to [defaultLightOverlayDecoration] when
-  /// [MediaQuery.platformBrightness] returns [Brightness.light] or null, and
-  /// [defaultDarkOverlayDecoration] when [MediaQuery.platformBrightness]
+  /// [MediaQuery.platformBrightnessOf] returns [Brightness.light] or null, and
+  /// [defaultDarkOverlayDecoration] when [MediaQuery.platformBrightnessOf]
   /// returns [Brightness.dark].
   final Decoration? surfaceDecoration;
 
@@ -433,7 +466,7 @@ class RawMenuAnchor extends StatelessWidget {
   /// Defaults to [AlignmentDirectional.bottomStart].
   final AlignmentGeometry? alignment;
 
-  /// The amount to offset the menu relative to the anchor attachment point.
+  /// The offset applied to the menu relative to the anchor attachment point.
   ///
   /// By default, increasing the [Offset.dx] and [Offset.dy] value of
   /// [alignmentOffset] will shift the menu position rightward and downward,
@@ -441,8 +474,8 @@ class RawMenuAnchor extends StatelessWidget {
   ///
   /// However, when the [alignment] is an [AlignmentDirectional], increasing the
   /// [Offset.dx] value of [alignmentOffset] will shift the menu in the reading
-  /// direction of the ambient [Directionality] -- leftward in
-  /// [TextDirection.ltr] and rightward in [TextDirection.rtl].
+  /// direction of the ambient [Directionality] -- rightward in
+  /// [TextDirection.ltr] and leftward in [TextDirection.rtl].
   ///
   /// The [alignment] and [alignmentOffset] are ignored if a `position` argument
   /// is provided to [MenuController.open].
@@ -612,6 +645,7 @@ class RawMenuAnchor extends StatelessWidget {
     );
   }
 
+  /// The type of the menu overlay used for testing.
   @visibleForTesting
   static Type get debugMenuOverlayPanelType => _MenuOverlayPanel;
 
@@ -707,9 +741,7 @@ sealed class _RawMenuAnchorState<T extends _RawMenuAnchor> extends State<T> {
     final Size newSize = MediaQuery.sizeOf(context);
     if (_viewSize != null && newSize != _viewSize) {
       // Close the menus if the view changes size.
-      if (!kMenuDebugLayout) {
-        _root._close();
-      }
+      _root._close();
     }
     _viewSize = newSize;
   }
@@ -900,7 +932,6 @@ class _RawMenuAnchorOverlayState
   Offset? _menuPosition;
   FocusNode? _menuFocusNode;
   FocusScopeNode? _menuScopeNode;
-
   bool get _isRootOverlay => _parent is! _RawMenuAnchorOverlayState;
   FocusTraversalPolicy? get _overlayTraversalPolicy {
     if (_menuScopeNode?.context?.mounted != true) {
@@ -1205,10 +1236,9 @@ class _RawMenuAnchorPanelState
 /// RawMenuAnchor(
 ///   menuChildren: <Widget>[
 ///     Builder(builder: (BuildContext context) {
-///       final MenuController controller = MenuController.maybeOf(context)!;
-///       return TextButton(
+///       return MenuItemButton(
 ///         onPressed: () {
-///           controller.close();
+///           MenuController.maybeOf(context)?.close();
 ///         },
 ///         child: const Text('Close'),
 ///       );
@@ -1354,6 +1384,7 @@ class _MenuOverlay extends StatelessWidget {
     final MenuController menuController = MenuController.maybeOf(context)!;
     final _RawMenuAnchorOverlayState state =
         menuController._anchor! as _RawMenuAnchorOverlayState;
+
     final Widget child = Semantics.fromProperties(
       explicitChildNodes: true,
       properties: const SemanticsProperties(
@@ -1389,6 +1420,7 @@ class _MenuOverlay extends StatelessWidget {
         ),
       ),
     );
+
     return ConstrainedBox(
       constraints: BoxConstraints.loose(position.overlaySize),
       child: Builder(builder: (BuildContext context) {
@@ -1485,6 +1517,9 @@ class _MenuOverlayPanel extends StatelessWidget {
 class DismissMenuAction extends DismissAction {
   /// Creates a [DismissMenuAction].
   DismissMenuAction({required this.controller});
+
+  /// The [MenuController] that manages the menu which should be dismissed upon
+  /// invocation.
   final MenuController controller;
 
   @override
