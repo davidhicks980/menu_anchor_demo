@@ -1018,16 +1018,10 @@ class _RawMenuAnchorOverlayState
 
     // Focus is only used to monitor focus changes, so it's not necessary to
     // include semantics or allow focus to be requested.
-    return Focus(
-      focusNode: _menuFocusNode,
-      includeSemantics: false,
-      canRequestFocus: false,
-      onFocusChange: _handleFocusChange,
-      child: OverlayPortal.targetsRootOverlay(
-        controller: _overlayController,
-        overlayChildBuilder: _buildOverlay,
-        child: child,
-      ),
+    return OverlayPortal.targetsRootOverlay(
+      controller: _overlayController,
+      overlayChildBuilder: _buildOverlay,
+      child: child,
     );
   }
 
