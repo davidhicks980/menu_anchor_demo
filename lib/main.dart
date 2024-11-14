@@ -229,92 +229,107 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample>
     final dividerTheme = DividerTheme.of(context);
     return Scaffold(
       body: SafeArea(
-        bottom: false,
-        top: false,
         child: Center(
           child: Stack(
             fit: StackFit.expand,
             children: [
               Builder(builder: (context) {
-                final width = MediaQuery.sizeOf(context).width;
+                final size = MediaQuery.sizeOf(context);
                 final offset = showNavigationDrawer ? 250.0 : 50.0;
                 return AnimatedPositioned(
                   duration: const Duration(milliseconds: 800),
                   left: offset,
-                  width: width - offset,
+                  width: size.width - offset,
                   top: 0,
                   bottom: 0,
                   curve: Curves.easeOutQuint,
-                  child: Stack(
-                    alignment: AlignmentDirectional.topStart,
-                    children: <Widget>[
-                      widget.child,
-                    ],
-                  ),
-                );
-              }),
-              AnimatedPositioned(
-                left: showNavigationDrawer ? -50 : -250,
-                width: 300,
-                top: 0,
-                bottom: 0,
-                duration: const Duration(milliseconds: 800),
-                curve: Curves.easeOutQuint,
-                child: DecoratedBox(
-                  position: DecorationPosition.foreground,
-                  decoration: BoxDecoration(
-                    border: AliasedBorder(
-                      right: BorderSide(
-                        color: dividerTheme.color!,
-                        width: dividerTheme.thickness ?? 0.5,
+                  child: UnconstrainedBox(
+                    clipBehavior: Clip.hardEdge,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: size.width,
+                        maxHeight: size.height,
                       ),
-                    ),
-                  ),
-                  child: ClipRect(
-                    child: OverflowBox(
-                      alignment: AlignmentDirectional.topStart,
-                      fit: OverflowBoxFit.deferToChild,
-                      maxWidth: 300,
-                      minWidth: 0,
                       child: Stack(
-                        children: [
-                          Positioned(
-                            top: 0,
-                            bottom: 0,
-                            left: 0,
-                            child: AnimatedOpacity(
-                                duration: const Duration(milliseconds: 800),
-                                curve: Curves.easeOutQuint,
-                                opacity: showNavigationDrawer ? 1 : 0,
-                                child: FocusTraversalGroup(
-                                  descendantsAreTraversable:
-                                      showNavigationDrawer,
-                                  descendantsAreFocusable: showNavigationDrawer,
-                                  child: _Drawer(
-                                    onDestinationSelected: handleScreenChanged,
-                                    selectedIndex: _selectedIndex,
-                                    settings: widget.settings,
-                                  ),
-                                )),
-                          ),
-                          Positioned(
-                            top: 2,
-                            height: 50,
-                            width: 50,
-                            right: 0,
-                            child: Center(
-                              child: MenuButton(
-                                isOpen: showNavigationDrawer,
-                                onPressed: toggleDrawer,
-                              ),
-                            ),
-                          ),
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          widget.child,
                         ],
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
+              AnimatedPositioned(
+                  left: showNavigationDrawer ? -50 : -250,
+                  width: 300,
+                  top: 0,
+                  bottom: 0,
+                  duration: const Duration(milliseconds: 800),
+                  curve: Curves.easeOutQuint,
+                  child: TapRegion(
+                    onTapOutside: (event) {
+                      if (showNavigationDrawer) {
+                        toggleDrawer();
+                      }
+                    },
+                    child: DecoratedBox(
+                      position: DecorationPosition.foreground,
+                      decoration: BoxDecoration(
+                        border: AliasedBorder(
+                          right: BorderSide(
+                            color: dividerTheme.color!,
+                            width: dividerTheme.thickness ?? 0.5,
+                          ),
+                        ),
+                      ),
+                      child: ClipRect(
+                        child: OverflowBox(
+                          alignment: AlignmentDirectional.topStart,
+                          fit: OverflowBoxFit.deferToChild,
+                          maxWidth: 300,
+                          minWidth: 0,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                child: AnimatedOpacity(
+                                    duration: const Duration(milliseconds: 800),
+                                    curve: Curves.easeOutQuint,
+                                    opacity: showNavigationDrawer ? 1 : 0,
+                                    child: FocusTraversalGroup(
+                                      descendantsAreTraversable:
+                                          showNavigationDrawer,
+                                      descendantsAreFocusable:
+                                          showNavigationDrawer,
+                                      child: _Drawer(
+                                        onDestinationSelected:
+                                            handleScreenChanged,
+                                        selectedIndex: _selectedIndex,
+                                        settings: widget.settings,
+                                      ),
+                                    )),
+                              ),
+                              Positioned(
+                                top: 2,
+                                height: 50,
+                                width: 50,
+                                right: 0,
+                                child: Center(
+                                  child: MenuButton(
+                                    isOpen: showNavigationDrawer,
+                                    onPressed: toggleDrawer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )),
             ],
           ),
         ),
@@ -411,8 +426,9 @@ class _Drawer extends StatelessWidget {
                 ),
               ),
               Padding(
-                  padding: EdgeInsets.fromLTRB(68, 16, 28, 10),
-                  child: settings!),
+                padding: EdgeInsets.fromLTRB(68, 16, 28, 10),
+                child: settings!,
+              ),
             ],
           ),
         ),

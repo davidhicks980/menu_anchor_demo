@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide MenuController;
 import 'package:flutter/services.dart';
@@ -156,10 +158,23 @@ class _NestedWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Platform.isAndroid || Platform.isIOS;
     return GestureDetector(
-      onSecondaryTapDown: (TapDownDetails details) {
-        MenuController.maybeOf(context)?.open(position: details.localPosition);
-      },
+      onLongPressStart: isMobile
+          ? (details) {
+              print('onLongPressDown');
+              MenuController.maybeOf(context)
+                  ?.open(position: details.localPosition);
+              HapticFeedback.heavyImpact();
+            }
+          : null,
+      onSecondaryTapDown: !isMobile
+          ? (TapDownDetails details) {
+              print('onSecondaryTapDown');
+              MenuController.maybeOf(context)
+                  ?.open(position: details.globalPosition);
+            }
+          : null,
       onTapDown: (TapDownDetails details) {
         MenuController.maybeOf(context)?.close();
       },
