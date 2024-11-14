@@ -93,12 +93,17 @@ class _MenuNodeExampleState extends State<_MenuNodeExample> {
                   ? const Color(0x0D1A1A1A)
                   : Colors.transparent,
               child: MenuItemButton(
+                onFocusChange: (value) {
+                  print('Focus: $value');
+                },
                 onHover: (bool value) {
+                  print('Hover: $value');
                   if (value) {
                     controller.open();
                   }
                 },
                 onPressed: () {
+                  print('Pressed: ${controller.isOpen}');
                   if (controller.isOpen) {
                     controller.close();
                   } else {
