@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:raw_menu_anchor_web/aliased_border.dart';
@@ -269,7 +271,8 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample>
                   curve: Curves.easeOutQuint,
                   child: TapRegion(
                     onTapOutside: (event) {
-                      if (showNavigationDrawer) {
+                      if (showNavigationDrawer &&
+                          (Platform.isAndroid || Platform.isIOS)) {
                         toggleDrawer();
                       }
                     },
