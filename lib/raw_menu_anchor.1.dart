@@ -12,7 +12,7 @@ import 'raw_menu_anchor.dart';
 // void main() => runApp(const CupertinoSimpleMenuApp());
 
 class _ContextMenuExample extends StatefulWidget {
-  const _ContextMenuExample({super.key});
+  const _ContextMenuExample();
 
   @override
   State<_ContextMenuExample> createState() => _ContextMenuExampleState();
@@ -152,26 +152,35 @@ class _ContextMenuExampleState extends State<_ContextMenuExample> {
 }
 
 class _NestedWidget extends StatelessWidget {
-  const _NestedWidget({super.key});
+  const _NestedWidget();
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.android;
+    // Long-press on mobile, secondary-tap (right click) on desktop.
+    GestureLongPressStartCallback? onLongPressStart;
+    GestureTapDownCallback? onSecondaryTapDown;
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+        onLongPressStart = (LongPressStartDetails details) {
+          MenuController.maybeOf(context)
+              ?.open(position: details.localPosition);
+          HapticFeedback.heavyImpact();
+        };
+        break;
+      case TargetPlatform.macOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        onSecondaryTapDown = (TapDownDetails details) {
+          MenuController.maybeOf(context)
+              ?.open(position: details.localPosition);
+        };
+        break;
+    }
     return GestureDetector(
-      onLongPressStart: isMobile
-          ? (details) {
-              MenuController.maybeOf(context)
-                  ?.open(position: details.localPosition);
-              HapticFeedback.heavyImpact();
-            }
-          : null,
-      onSecondaryTapDown: !isMobile
-          ? (TapDownDetails details) {
-              MenuController.maybeOf(context)
-                  ?.open(position: details.localPosition);
-            }
-          : null,
+      onLongPressStart: onLongPressStart,
+      onSecondaryTapDown: onSecondaryTapDown,
       onTapDown: (TapDownDetails details) {
         MenuController.maybeOf(context)?.close();
       },

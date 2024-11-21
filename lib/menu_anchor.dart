@@ -3467,6 +3467,7 @@ class _Submenu extends StatelessWidget {
     final EdgeInsetsGeometry resolvedPadding = padding
         .add(EdgeInsets.fromLTRB(dx, dy, dx, dy))
         .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
+
     final Rect anchorRect = Rect.fromLTRB(
       menuPosition.anchorRect.left + dx,
       menuPosition.anchorRect.top - dy,

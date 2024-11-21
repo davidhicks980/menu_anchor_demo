@@ -1033,8 +1033,9 @@ class _RawMenuAnchorOverlayState
 
   Widget _buildOverlay(BuildContext context) {
     final BuildContext anchorContext = _anchorKey.currentContext!;
-    final RenderBox overlay =
-        Overlay.of(anchorContext).context.findRenderObject()! as RenderBox;
+    final RenderBox overlay = Overlay.of(anchorContext, rootOverlay: true)
+        .context
+        .findRenderObject()! as RenderBox;
     final RenderBox anchor = anchorContext.findRenderObject()! as RenderBox;
     final Rect anchorRect = anchor.localToGlobal(Offset.zero) & anchor.size;
     return widget.overlayBuilder(
