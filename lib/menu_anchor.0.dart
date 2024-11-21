@@ -215,7 +215,8 @@ class MenuAnchorExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(child: _MenuAnchorExample(message: kMessage)));
+    return SafeArea(
+      child: _MenuAnchorExample(message: kMessage),
+    );
   }
 }

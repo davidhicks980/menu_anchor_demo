@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -250,95 +248,86 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample>
                   top: 0,
                   bottom: 0,
                   curve: Curves.easeOutQuint,
-                  child: UnconstrainedBox(
-                    clipBehavior: Clip.hardEdge,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: size.width,
-                        maxHeight: size.height,
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          widget.child,
-                        ],
-                      ),
-                    ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      widget.child,
+                    ],
                   ),
                 );
               }),
               AnimatedPositioned(
-                  left: showNavigationDrawer ? -50 : -250,
-                  width: 300,
-                  top: 0,
-                  bottom: 0,
-                  duration: const Duration(milliseconds: 800),
-                  curve: Curves.easeOutQuint,
-                  child: TapRegion(
-                    onTapOutside: (event) {
-                      if (showNavigationDrawer &&
-                          (defaultTargetPlatform == TargetPlatform.iOS ||
-                              defaultTargetPlatform == TargetPlatform.iOS)) {
-                        toggleDrawer();
-                      }
-                    },
-                    child: DecoratedBox(
-                      position: DecorationPosition.foreground,
-                      decoration: BoxDecoration(
-                        border: AliasedBorder(
-                          right: BorderSide(
-                            color: dividerTheme.color!,
-                            width: dividerTheme.thickness ?? 0.5,
-                          ),
-                        ),
-                      ),
-                      child: ClipRect(
-                        child: OverflowBox(
-                          alignment: AlignmentDirectional.topStart,
-                          fit: OverflowBoxFit.deferToChild,
-                          maxWidth: 300,
-                          minWidth: 0,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                child: AnimatedOpacity(
-                                    duration: const Duration(milliseconds: 800),
-                                    curve: Curves.easeOutQuint,
-                                    opacity: showNavigationDrawer ? 1 : 0,
-                                    child: FocusTraversalGroup(
-                                      descendantsAreTraversable:
-                                          showNavigationDrawer,
-                                      descendantsAreFocusable:
-                                          showNavigationDrawer,
-                                      child: _Drawer(
-                                        onDestinationSelected:
-                                            handleScreenChanged,
-                                        selectedIndex: _selectedIndex,
-                                        settings: widget.settings,
-                                      ),
-                                    )),
-                              ),
-                              Positioned(
-                                top: 2,
-                                height: 50,
-                                width: 50,
-                                right: 0,
-                                child: Center(
-                                  child: MenuButton(
-                                    isOpen: showNavigationDrawer,
-                                    onPressed: toggleDrawer,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                left: showNavigationDrawer ? -50 : -250,
+                width: 300,
+                top: 0,
+                bottom: 0,
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.easeOutQuint,
+                child: TapRegion(
+                  onTapOutside: (event) {
+                    if (showNavigationDrawer &&
+                        (defaultTargetPlatform == TargetPlatform.android ||
+                            defaultTargetPlatform == TargetPlatform.iOS)) {
+                      toggleDrawer();
+                    }
+                  },
+                  child: DecoratedBox(
+                    position: DecorationPosition.foreground,
+                    decoration: BoxDecoration(
+                      border: AliasedBorder(
+                        right: BorderSide(
+                          color: dividerTheme.color!,
+                          width: dividerTheme.thickness ?? 0.5,
                         ),
                       ),
                     ),
-                  )),
+                    child: ClipRect(
+                      child: OverflowBox(
+                        alignment: AlignmentDirectional.topStart,
+                        fit: OverflowBoxFit.deferToChild,
+                        maxWidth: 300,
+                        minWidth: 0,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 0,
+                              bottom: 0,
+                              left: 0,
+                              child: AnimatedOpacity(
+                                duration: const Duration(milliseconds: 800),
+                                curve: Curves.easeOutQuint,
+                                opacity: showNavigationDrawer ? 1 : 0,
+                                child: FocusTraversalGroup(
+                                  descendantsAreTraversable:
+                                      showNavigationDrawer,
+                                  descendantsAreFocusable: showNavigationDrawer,
+                                  child: _Drawer(
+                                    onDestinationSelected: handleScreenChanged,
+                                    selectedIndex: _selectedIndex,
+                                    settings: widget.settings,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 2,
+                              height: 50,
+                              width: 50,
+                              right: 0,
+                              child: Center(
+                                child: MenuButton(
+                                  isOpen: showNavigationDrawer,
+                                  onPressed: toggleDrawer,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
