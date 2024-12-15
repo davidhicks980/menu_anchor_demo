@@ -158,14 +158,30 @@ class _GridSliderState extends State<GridSlider> {
               ),
             ),
             Positioned(
-              top: 8,
-              left: 12,
+              top: 10,
+              left: 10,
               child: DefaultTextStyle(
                 style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: brightness == Brightness.dark ? white : black,
-                ),
+                    backgroundColor: brightness == Brightness.light
+                        ? white.withAlpha(120)
+                        : black.withAlpha(120),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: brightness == Brightness.dark ? white : black,
+                    shadows: brightness == Brightness.light
+                        ? [
+                            Shadow(
+                              color: white,
+                              offset: const Offset(0, 0),
+                              blurRadius: 10,
+                            ),
+                            Shadow(
+                              color: white,
+                              offset: const Offset(0, 0),
+                              blurRadius: 10,
+                            ),
+                          ]
+                        : null),
                 child: widget.title,
               ),
             ),

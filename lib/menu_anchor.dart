@@ -52,7 +52,14 @@ import 'package:flutter/material.dart'
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart' hide WidgetPropertyResolver;
+import 'package:flutter/widgets.dart'
+    hide
+        MaterialState,
+        MaterialStateMouseCursor,
+        MaterialStateProperty,
+        MaterialStatePropertyAll,
+        MaterialStatesController,
+        WidgetPropertyResolver;
 
 import 'raw_menu_anchor.dart';
 
@@ -360,7 +367,9 @@ class _MenuAnchorState extends State<MenuAnchor> {
   @override
   void initState() {
     super.initState();
-    _internalMenuController ??= MenuController();
+    if (widget.controller == null) {
+      _internalMenuController = MenuController();
+    }
   }
 
   @override
@@ -1505,6 +1514,7 @@ class SubmenuButton extends StatefulWidget {
     this.statesController,
     this.leadingIcon,
     this.trailingIcon,
+    this.submenuIcon,
     required this.menuChildren,
     required this.child,
   });
@@ -1568,6 +1578,18 @@ class SubmenuButton extends StatefulWidget {
 
   /// An optional icon to display before the [child].
   final Widget? leadingIcon;
+
+  /// If provided, the widget replaces the default [SubmenuButton] arrow icon.
+  ///
+  /// Resolves in the following states:
+  ///  * [WidgetState.disabled].
+  ///  * [WidgetState.hovered].
+  ///  * [WidgetState.focused].
+  ///
+  /// If this is null, then the value of [MenuThemeData.submenuIcon] is used.
+  /// If that is also null, then defaults to a right arrow icon with the size
+  /// of 24 pixels.
+  final WidgetStateProperty<Widget?>? submenuIcon;
 
   /// An optional icon to display after the [child].
   final Widget? trailingIcon;
@@ -1801,6 +1823,17 @@ class _SubmenuButtonState extends State<SubmenuButton> {
       (Axis.vertical, TextDirection.rtl) => Offset(0, -menuPadding.top),
       (Axis.vertical, TextDirection.ltr) => Offset(0, -menuPadding.top),
     };
+    final Set<WidgetState> states = <WidgetState>{
+      if (!_enabled) WidgetState.disabled,
+      if (_isHovered) WidgetState.hovered,
+      if (_buttonFocusNode.hasFocus) WidgetState.focused,
+    };
+    final Widget submenuIcon = widget.submenuIcon?.resolve(states) ??
+        // MenuTheme.of(context).submenuIcon?.resolve(states) ??
+        const Icon(
+          Icons.arrow_right, // Automatically switches with text direction.
+          size: _kDefaultSubmenuIconSize,
+        );
 
     return Actions(
         actions: actions,
@@ -1883,6 +1916,7 @@ class _SubmenuButtonState extends State<SubmenuButton> {
                     showDecoration:
                         (_parent?._orientation ?? Axis.horizontal) ==
                             Axis.vertical,
+                    submenuIcon: submenuIcon,
                     child: child,
                   ),
                 ),
@@ -2871,6 +2905,7 @@ class _MenuItemLabel extends StatelessWidget {
     this.shortcut,
     this.semanticsLabel,
     this.overflowAxis = Axis.vertical,
+    this.submenuIcon,
     this.child,
   });
 
@@ -2900,6 +2935,9 @@ class _MenuItemLabel extends StatelessWidget {
 
   /// The direction in which the menu item expands.
   final Axis overflowAxis;
+
+  /// The submenu icon that is displayed when [showDecoration] and [hasSubmenu] are true.
+  final Widget? submenuIcon;
 
   /// An optional child widget that is displayed in the label.
   final Widget? child;
@@ -2972,10 +3010,7 @@ class _MenuItemLabel extends StatelessWidget {
         if (showDecoration && hasSubmenu)
           Padding(
             padding: EdgeInsetsDirectional.only(start: horizontalPadding),
-            child: const Icon(
-              Icons.arrow_right, // Automatically switches with text direction.
-              size: _kDefaultSubmenuIconSize,
-            ),
+            child: submenuIcon,
           ),
       ],
     );
@@ -3468,25 +3503,28 @@ class _Submenu extends StatelessWidget {
         .add(EdgeInsets.fromLTRB(dx, dy, dx, dy))
         .clamp(EdgeInsets.zero, EdgeInsetsGeometry.infinity);
 
-    final Rect anchorRect = Rect.fromLTRB(
-      menuPosition.anchorRect.left + dx,
-      menuPosition.anchorRect.top - dy,
-      menuPosition.anchorRect.right,
-      menuPosition.anchorRect.bottom,
-    );
+    final Rect anchorRect = layerLink == null
+        ? Rect.fromLTRB(
+            menuPosition.anchorRect.left + dx,
+            menuPosition.anchorRect.top - dy,
+            menuPosition.anchorRect.right,
+            menuPosition.anchorRect.bottom,
+          )
+        : Rect.zero;
 
-    Widget body = TapRegion(
-      consumeOutsideTaps: consumeOutsideTaps,
+    final Widget menuPanel = TapRegion(
       groupId: menuPosition.tapRegionGroupId,
+      consumeOutsideTaps: anchor._root._menuController.isOpen &&
+          anchor.widget.consumeOutsideTap,
       onTapOutside: (PointerDownEvent event) {
-        MenuController.maybeOf(context)?.close();
+        anchor._menuController.close();
       },
-      child: FocusScope(
-        node: menuScopeNode,
-        skipTraversal: true,
-        child: MouseRegion(
-          cursor: mouseCursor,
-          hitTestBehavior: HitTestBehavior.deferToChild,
+      child: MouseRegion(
+        cursor: mouseCursor,
+        hitTestBehavior: HitTestBehavior.deferToChild,
+        child: FocusScope(
+          node: anchor._menuScopeNode,
+          skipTraversal: true,
           child: Actions(
             actions: <Type, Action<Intent>>{
               DismissIntent:
@@ -3507,37 +3545,40 @@ class _Submenu extends StatelessWidget {
       ),
     );
 
-    if (layerLink != null) {
-      body = CompositedTransformFollower(
-        link: layerLink!,
-        targetAnchor: Alignment.bottomLeft,
-        child: body,
-      );
-    }
-
-    return Theme(
+    final Widget layout = Theme(
       data: Theme.of(context).copyWith(visualDensity: visualDensity),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(menuPosition.overlaySize),
         child: Builder(builder: (BuildContext context) {
+          final MediaQueryData mediaQuery = MediaQuery.of(context);
           return CustomSingleChildLayout(
-              delegate: _MenuLayout(
-                anchorRect: anchorRect,
-                textDirection: textDirection,
-                avoidBounds:
-                    DisplayFeatureSubScreen.avoidBounds(MediaQuery.of(context))
-                        .toSet(),
-                menuPadding: resolvedPadding,
-                alignment: alignment,
-                alignmentOffset: alignmentOffset,
-                menuPosition: menuPosition.position,
-                orientation: anchor._orientation,
-                parentOrientation:
-                    anchor._parent?._orientation ?? Axis.horizontal,
-              ),
-              child: body);
+            delegate: _MenuLayout(
+              anchorRect: anchorRect,
+              textDirection: textDirection,
+              avoidBounds:
+                  DisplayFeatureSubScreen.avoidBounds(mediaQuery).toSet(),
+              menuPadding: resolvedPadding,
+              alignment: alignment,
+              alignmentOffset: alignmentOffset,
+              menuPosition: menuPosition.position,
+              orientation: anchor._orientation,
+              parentOrientation:
+                  anchor._parent?._orientation ?? Axis.horizontal,
+            ),
+            child: menuPanel,
+          );
         }),
       ),
+    );
+
+    if (layerLink == null) {
+      return layout;
+    }
+
+    return CompositedTransformFollower(
+      link: layerLink!,
+      targetAnchor: Alignment.bottomLeft,
+      child: layout,
     );
   }
 }

@@ -148,6 +148,10 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
         textDirection: _textDirection,
         child: MaterialApp(
           theme: ThemeData(
+            sliderTheme: SliderThemeData(
+              showValueIndicator: ShowValueIndicator.always,
+            ),
+            useMaterial3: true,
             fontFamily: "Inter",
             dividerTheme: DividerThemeData(
               thickness: 1 / (MediaQuery.maybeDevicePixelRatioOf(context) ?? 1),
@@ -345,90 +349,119 @@ class _Drawer extends StatelessWidget {
   final void Function(int) onDestinationSelected;
   final int selectedIndex;
   final Widget? settings;
+  static const iconTheme = IconThemeData(
+    size: 22,
+  );
 
   @override
   Widget build(BuildContext context) {
     final dividerTheme = DividerTheme.of(context);
+    final isLTR = Directionality.of(context) == TextDirection.ltr;
+    final leadingSpacing = isLTR ? EdgeInsets.only(left: 36) : EdgeInsets.zero;
+    final headerPadding = isLTR
+        ? EdgeInsets.fromLTRB(64, 16, 16, 10)
+        : EdgeInsets.fromLTRB(16, 12.5, 56, 0);
+    final theme = Theme.of(context);
+    var TextTheme(:titleMedium, :bodyMedium, :titleLarge, :titleSmall) =
+        theme.textTheme;
+    titleMedium = titleMedium!.copyWith(
+      fontWeight: FontWeight.w600,
+      letterSpacing: -0.21,
+      color: theme.colorScheme.onSurfaceVariant.withAlpha(190),
+    );
+    final menuItemStyle = TextStyle(fontFamily: "Inter", fontVariations: [
+      FontVariation("wght", 450),
+    ]);
     return MediaQuery.withNoTextScaling(
-      child: DefaultTextStyle.merge(
-        child: ColoredBox(
-          color: Theme.of(context).navigationDrawerTheme.backgroundColor ??
-              Theme.of(context).colorScheme.surfaceContainer,
-          child: NavigationDrawer(
-            onDestinationSelected: onDestinationSelected,
-            selectedIndex: selectedIndex,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(64, 16, 16, 10),
-                child: Text(
-                  'Examples',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(fontWeight: FontWeight.w800, fontSize: 24),
+      child: ColoredBox(
+        color: theme.navigationDrawerTheme.backgroundColor ??
+            theme.colorScheme.surfaceContainer,
+        child: NavigationDrawer(
+          onDestinationSelected: onDestinationSelected,
+          selectedIndex: selectedIndex,
+          children: <Widget>[
+            Padding(
+              padding: headerPadding,
+              child: Text(
+                'Examples',
+                style: titleLarge!.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(64, 16, 16, 10),
-                child: Text(
-                  'Documentation',
-                  style: Theme.of(context).textTheme.titleSmall,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(64, 16, 16, 8),
+              child: Text('Documentation', style: titleMedium),
+            ),
+            for (final destination in Destination.values
+                .where((destination) => !destination.isDevelopment))
+              NavigationDrawerDestination(
+                backgroundColor: Colors.transparent,
+                label: DefaultTextStyle.merge(
+                  style: menuItemStyle,
+                  child: Text(destination.label),
                 ),
-              ),
-              for (final destination in Destination.values
-                  .where((destination) => !destination.isDevelopment))
-                NavigationDrawerDestination(
-                  backgroundColor: Colors.transparent,
-                  label: Text(destination.label),
-                  icon: Padding(
-                    padding: const EdgeInsets.only(left: 36),
+                icon: IconTheme.merge(
+                  data: iconTheme,
+                  child: Padding(
+                    padding: leadingSpacing,
                     child: destination.icon,
                   ),
-                  selectedIcon: Padding(
-                    padding: const EdgeInsets.only(left: 36),
+                ),
+                selectedIcon: IconTheme.merge(
+                  data: iconTheme,
+                  child: Padding(
+                    padding: leadingSpacing,
                     child: destination.selectedIcon,
                   ),
                 ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(64, 16, 16, 10),
-                child: Text(
-                  'Development',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
               ),
-              for (final destination in Destination.values
-                  .where((destination) => destination.isDevelopment))
-                NavigationDrawerDestination(
-                  backgroundColor: Colors.transparent,
-                  label: Text(destination.label),
-                  icon: Padding(
-                    padding: const EdgeInsets.only(left: 36),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(64, 16, 16, 10),
+              child: Text('Development', style: titleMedium),
+            ),
+            for (final destination in Destination.values
+                .where((destination) => destination.isDevelopment))
+              NavigationDrawerDestination(
+                backgroundColor: Colors.transparent,
+                label: DefaultTextStyle.merge(
+                  style: menuItemStyle,
+                  child: Text(destination.label),
+                ),
+                icon: IconTheme.merge(
+                  data: iconTheme,
+                  child: Padding(
+                    padding: leadingSpacing,
                     child: destination.icon,
                   ),
-                  selectedIcon: Padding(
-                    padding: const EdgeInsets.only(left: 36),
+                ),
+                selectedIcon: IconTheme.merge(
+                  data: iconTheme,
+                  child: Padding(
+                    padding: leadingSpacing,
                     child: destination.selectedIcon,
                   ),
                 ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(70, 16, 28, 10),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: AliasedBorder(
-                      bottom: BorderSide(
-                        color: dividerTheme.color!,
-                        width: dividerTheme.thickness ?? 0.5,
-                      ),
+              ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(70, 16, 28, 10),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: AliasedBorder(
+                    bottom: BorderSide(
+                      color: dividerTheme.color!,
+                      width: dividerTheme.thickness ?? 0.5,
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(68, 16, 28, 10),
-                child: settings!,
-              ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(68, 16, 28, 10),
+              child: settings!,
+            ),
+          ],
         ),
       ),
     );
@@ -559,7 +592,7 @@ class Settings extends StatelessWidget {
               ],
             ),
             Text(
-              "Text scale: ${textScaleFactor.toStringAsFixed(2)}",
+              textScaleFactor.toStringAsFixed(2),
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!

@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' show Theme;
 import 'package:flutter/widgets.dart';
 
 import 'raw_menu_anchor.dart';
@@ -252,8 +253,8 @@ class AnchorButton extends StatelessWidget {
     final MenuController? controller = MenuController.maybeOf(context);
     return ColoredBox(
       color: controller?.isOpen ?? false
-          ? const ui.Color.fromARGB(30, 255, 255, 255)
-          : const ui.Color.fromARGB(255, 116, 116, 116),
+          ? Theme.of(context).colorScheme.secondaryContainer
+          : Theme.of(context).colorScheme.primaryContainer,
       child: Button(
         child,
         onPressed: () {
