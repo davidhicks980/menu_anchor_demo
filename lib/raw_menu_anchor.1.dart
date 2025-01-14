@@ -8,19 +8,20 @@ import 'package:flutter/services.dart';
 
 import 'raw_menu_anchor.dart';
 
-/// Flutter code sample for a [CupertinoMenuAnchor] that shows a basic menu.
-// void main() => runApp(const CupertinoSimpleMenuApp());
+/// Flutter code sample for a [RawMenuAnchor] that shows a context menu.
+/// The menu can be opened by right-clicking.
 
-class _ContextMenuExample extends StatefulWidget {
-  const _ContextMenuExample();
+class ContextMenuExample extends StatefulWidget {
+  const ContextMenuExample({super.key});
 
   @override
-  State<_ContextMenuExample> createState() => _ContextMenuExampleState();
+  State<ContextMenuExample> createState() => _ContextMenuExampleState();
 }
 
-class _ContextMenuExampleState extends State<_ContextMenuExample> {
+class _ContextMenuExampleState extends State<ContextMenuExample> {
   final MenuController controller = MenuController();
   bool _menuWasEnabled = false;
+  String _selected = '';
 
   @override
   void initState() {
@@ -55,7 +56,10 @@ class _ContextMenuExampleState extends State<_ContextMenuExample> {
     }
   }
 
-  void _handlePressed() {
+  void _handlePressed(String value) {
+    setState(() {
+      _selected = value;
+    });
     controller.close();
   }
 
@@ -63,100 +67,126 @@ class _ContextMenuExampleState extends State<_ContextMenuExample> {
   Widget build(BuildContext context) {
     return RawMenuAnchor(
       controller: controller,
-      constraints: const BoxConstraints(minWidth: 180),
-      padding: const EdgeInsets.symmetric(vertical: 5),
       alignmentOffset: const Offset(0, 6),
-      menuChildren: <Widget>[
-        MenuItemButton(
-          autofocus: true,
-          onPressed: _handlePressed,
-          leadingIcon: const Icon(Icons.undo),
-          child: const Text('Undo'),
-        ),
-        MenuItemButton(
-          onPressed: _handlePressed,
-          leadingIcon: const Icon(Icons.redo),
-          child: const Text('Redo'),
-        ),
-        const Divider(thickness: 0.0, indent: 12, endIndent: 12),
-        MenuItemButton(
-          onPressed: _handlePressed,
-          leadingIcon: const Icon(Icons.cut),
-          child: const Text('Cut'),
-        ),
-        MenuItemButton(
-          onPressed: _handlePressed,
-          leadingIcon: const Icon(Icons.content_copy),
-          child: const Text('Copy'),
-        ),
-        MenuItemButton(
-          onPressed: _handlePressed,
-          leadingIcon: const Icon(Icons.content_paste),
-          child: const Text('Paste'),
-        ),
-        const Divider(thickness: 0.0, indent: 12, endIndent: 12),
-        RawMenuAnchor(
-          padding: const EdgeInsetsDirectional.symmetric(vertical: 5),
-          alignmentOffset: const Offset(-4, 0),
-          constraints: const BoxConstraints(minWidth: 180),
-          menuChildren: [
-            MenuItemButton(
-              onPressed: _handlePressed,
-              leadingIcon: const Icon(Icons.format_bold),
-              child: const Text('Bold'),
+      panel: RawMenuPanel(
+        constraints: const BoxConstraints(minWidth: 180),
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        menuChildren: <Widget>[
+          MenuItemButton(
+            autofocus: true,
+            onPressed: () {
+              _handlePressed('Undo');
+            },
+            leadingIcon: const Icon(Icons.undo),
+            child: const Text('Undo'),
+          ),
+          MenuItemButton(
+            onPressed: () {
+              _handlePressed('Redo');
+            },
+            leadingIcon: const Icon(Icons.redo),
+            child: const Text('Redo'),
+          ),
+          const Divider(thickness: 0.0, indent: 12, endIndent: 12),
+          MenuItemButton(
+            onPressed: () {
+              _handlePressed('Cut');
+            },
+            leadingIcon: const Icon(Icons.cut),
+            child: const Text('Cut'),
+          ),
+          MenuItemButton(
+            onPressed: () {
+              _handlePressed('Copy');
+            },
+            leadingIcon: const Icon(Icons.content_copy),
+            child: const Text('Copy'),
+          ),
+          MenuItemButton(
+            onPressed: () {
+              _handlePressed('Paste');
+            },
+            leadingIcon: const Icon(Icons.content_paste),
+            child: const Text('Paste'),
+          ),
+          const Divider(thickness: 0.0, indent: 12, endIndent: 12),
+          RawMenuAnchor(
+            padding: const EdgeInsetsDirectional.symmetric(vertical: 5),
+            panel: RawMenuPanel(
+              padding: const EdgeInsetsDirectional.symmetric(vertical: 5),
+              constraints: const BoxConstraints(minWidth: 180),
+              menuChildren: <Widget>[
+                MenuItemButton(
+                  onPressed: () {
+                    _handlePressed('Bold');
+                  },
+                  leadingIcon: const Icon(Icons.format_bold),
+                  child: const Text('Bold'),
+                ),
+                MenuItemButton(
+                  onPressed: () {
+                    _handlePressed('Italic');
+                  },
+                  leadingIcon: const Icon(Icons.format_italic),
+                  child: const Text('Italic'),
+                ),
+                MenuItemButton(
+                  onPressed: () {
+                    _handlePressed('Underline');
+                  },
+                  leadingIcon: const Icon(Icons.format_underline),
+                  child: const Text('Underline'),
+                ),
+              ],
             ),
-            MenuItemButton(
-              onPressed: _handlePressed,
-              leadingIcon: const Icon(Icons.format_italic),
-              child: const Text('Italic'),
-            ),
-            MenuItemButton(
-              onPressed: _handlePressed,
-              leadingIcon: const Icon(Icons.format_underline),
-              child: const Text('Underline'),
-            ),
-          ],
-          builder: (
-            BuildContext context,
-            MenuController controller,
-            Widget? child,
-          ) {
-            return MergeSemantics(
-              child: Semantics(
-                expanded: controller.isOpen,
-                child: ColoredBox(
-                  color: controller.isOpen
-                      ? const Color(0x0D1A1A1A)
-                      : Colors.transparent,
-                  child: MenuItemButton(
-                    onPressed: () {
-                      if (controller.isOpen) {
-                        controller.close();
-                      } else {
-                        controller.open();
-                      }
-                    },
-                    leadingIcon: const Icon(Icons.text_format),
-                    trailingIcon: const Icon(Icons.keyboard_arrow_right),
-                    child: const Text('Format'),
+            builder: (BuildContext context, MenuController controller,
+                Widget? child) {
+              return MergeSemantics(
+                child: Semantics(
+                  expanded: controller.isOpen,
+                  child: ColoredBox(
+                    color: controller.isOpen
+                        ? const Color(0x0D1A1A1A)
+                        : Colors.transparent,
+                    child: MenuItemButton(
+                      onPressed: () {
+                        if (controller.isOpen) {
+                          controller.close();
+                        } else {
+                          controller.open();
+                        }
+                      },
+                      leadingIcon: const Icon(Icons.text_format),
+                      trailingIcon: const Icon(Icons.keyboard_arrow_right),
+                      child: const Text('Format'),
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-        )
-      ],
-      child: const _NestedWidget(),
+              );
+            },
+          ),
+        ],
+      ),
+      child: NestedWidget(
+        child: Text(
+          _selected.isEmpty ? 'Right-click me!' : 'Selected: $_selected',
+          style: Theme.of(context)
+              .textTheme
+              .displaySmall!
+              .copyWith(color: Colors.white),
+        ),
+      ),
     );
   }
 }
 
-class _NestedWidget extends StatelessWidget {
-  const _NestedWidget();
+class NestedWidget extends StatelessWidget {
+  const NestedWidget({super.key, this.child});
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
-    // Long-press on mobile, secondary-tap (right click) on desktop.
+    // Long-press on mobile, secondary-click (right click) on desktop.
     GestureLongPressStartCallback? onLongPressStart;
     GestureTapDownCallback? onSecondaryTapDown;
     switch (defaultTargetPlatform) {
@@ -168,7 +198,6 @@ class _NestedWidget extends StatelessWidget {
               ?.open(position: details.localPosition);
           HapticFeedback.heavyImpact();
         };
-        break;
       case TargetPlatform.macOS:
       case TargetPlatform.linux:
       case TargetPlatform.windows:
@@ -176,11 +205,10 @@ class _NestedWidget extends StatelessWidget {
           MenuController.maybeOf(context)
               ?.open(position: details.localPosition);
         };
-        break;
     }
     return GestureDetector(
-      onLongPressStart: onLongPressStart,
       onSecondaryTapDown: onSecondaryTapDown,
+      onLongPressStart: onLongPressStart,
       onTapDown: (TapDownDetails details) {
         MenuController.maybeOf(context)?.close();
       },
@@ -206,8 +234,8 @@ class _NestedWidget extends StatelessWidget {
   }
 }
 
-class ContextMenuExample extends StatelessWidget {
-  const ContextMenuExample({super.key});
+class ContextMenuApp extends StatelessWidget {
+  const ContextMenuApp({super.key});
 
   static const ButtonStyle menuButtonStyle = ButtonStyle(
     splashFactory: InkSparkle.splashFactory,
@@ -222,12 +250,11 @@ class ContextMenuExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    kMenuDebugLayout = false;
     return Theme(
       data: Theme.of(context).copyWith(
         menuButtonTheme: const MenuButtonThemeData(style: menuButtonStyle),
       ),
-      child: const Scaffold(body: _ContextMenuExample()),
+      child: const Scaffold(body: ContextMenuExample()),
     );
   }
 }

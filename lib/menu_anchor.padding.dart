@@ -33,9 +33,8 @@ List<Widget> buildChildren(
       menuChildren: [
         for (int index = 0; index < 4; index++)
           DecoratedBox(
-            decoration:
-                (RawMenuAnchor.defaultLightOverlayDecoration as BoxDecoration)
-                    .copyWith(borderRadius: BorderRadius.zero, boxShadow: []),
+            decoration: (RawMenuPanel as BoxDecoration)
+                .copyWith(borderRadius: BorderRadius.zero, boxShadow: []),
             child: Button.text(
               "Sub" * (depth + 1) + 'menu Item $depth.${index + 1}',
               constraints: const BoxConstraints(maxHeight: 30),

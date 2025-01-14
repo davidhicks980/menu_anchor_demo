@@ -2,24 +2,22 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart'
-    hide MenuAnchor, MenuBar, MenuController, SubmenuButton;
+import 'package:flutter/material.dart' hide MenuController;
 
 import 'raw_menu_anchor.dart';
 
-/// Flutter code sample for a [CupertinoMenuAnchor] that shows a basic menu.
-// void main() => runApp(const CupertinoSimpleMenuApp());
+/// Flutter code sample for a [RawMenuAnchor] that shows a simple menu with
+/// three items.
 
-class _SimpleMenuExample extends StatefulWidget {
-  const _SimpleMenuExample({super.key});
+class SimpleMenuExample extends StatefulWidget {
+  const SimpleMenuExample({super.key});
 
   @override
-  State<_SimpleMenuExample> createState() => _SimpleMenuExampleState();
+  State<SimpleMenuExample> createState() => _SimpleMenuExampleState();
 }
 
-class _SimpleMenuExampleState extends State<_SimpleMenuExample> {
+class _SimpleMenuExampleState extends State<SimpleMenuExample> {
   final MenuController controller = MenuController();
-
   String _selected = '';
 
   void _handlePressed(String value) {
@@ -31,35 +29,41 @@ class _SimpleMenuExampleState extends State<_SimpleMenuExample> {
 
   @override
   Widget build(BuildContext context) {
-    kMenuDebugLayout = false;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Selected: $_selected',
-              style: Theme.of(context).textTheme.bodyMedium),
+          Text(
+            'Selected: $_selected',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
           RawMenuAnchor(
             controller: controller,
-            constraints: const BoxConstraints(minWidth: 120),
             padding: const EdgeInsets.symmetric(vertical: 5),
             alignmentOffset: const Offset(0, 6),
-            menuChildren: <Widget>[
-              MenuItemButton(
+            panel: RawMenuPanel(
+              constraints: const BoxConstraints(minWidth: 125),
+              menuChildren: <Widget>[
+                MenuItemButton(
                   onPressed: () {
                     _handlePressed('Cut');
                   },
-                  child: const Text('Cut')),
-              MenuItemButton(
+                  child: const Text('Cut'),
+                ),
+                MenuItemButton(
                   onPressed: () {
                     _handlePressed('Copy');
                   },
-                  child: const Text('Copy')),
-              MenuItemButton(
+                  child: const Text('Copy'),
+                ),
+                MenuItemButton(
                   onPressed: () {
                     _handlePressed('Paste');
                   },
-                  child: const Text('Paste')),
-            ],
+                  child: const Text('Paste'),
+                ),
+              ],
+            ),
             builder: (
               BuildContext context,
               MenuController controller,
@@ -83,8 +87,8 @@ class _SimpleMenuExampleState extends State<_SimpleMenuExample> {
   }
 }
 
-class SimpleMenuExample extends StatelessWidget {
-  const SimpleMenuExample({super.key});
+class SimpleMenuApp extends StatelessWidget {
+  const SimpleMenuApp({super.key});
 
   static const ButtonStyle menuButtonStyle = ButtonStyle(
     splashFactory: InkSparkle.splashFactory,
@@ -99,12 +103,11 @@ class SimpleMenuExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    kMenuDebugLayout = false;
     return Theme(
       data: Theme.of(context).copyWith(
         menuButtonTheme: const MenuButtonThemeData(style: menuButtonStyle),
       ),
-      child: const _SimpleMenuExample(),
+      child: const SimpleMenuExample(),
     );
   }
 }

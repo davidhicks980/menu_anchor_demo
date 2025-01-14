@@ -29,12 +29,16 @@ List<Widget> buildChildren(
           constraints: const BoxConstraints(maxHeight: 30),
         ),
       RawMenuAnchor(
-        constraints: BoxConstraints(minWidth: 125),
         padding: const EdgeInsetsDirectional.fromSTEB(0.5, 4, 1, 6),
         alignmentOffset: alignmentOffset,
         alignment: anchorAlignment,
         menuAlignment: menuAlignment,
-        menuChildren: children,
+        panel: RawMenuPanel(
+          constraints: BoxConstraints(
+            minWidth: 125,
+          ),
+          menuChildren: children,
+        ),
         builder: (
           BuildContext context,
           MenuController controller,
@@ -74,7 +78,6 @@ class AlignmentExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    kMenuDebugLayout = true;
     return DevelopmentTemplate(
       buildChildren: buildChildren,
       title: Padding(

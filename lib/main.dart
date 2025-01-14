@@ -11,6 +11,7 @@ import 'dropdown_menu.0.dart';
 import 'menu_anchor.0.dart';
 import 'menu_anchor.padding.dart';
 import 'raw_menu_anchor.alignment.dart';
+import 'raw_menu_anchor.animated.dart';
 import 'raw_menu_anchor.padding.dart';
 
 /// Flutter code sample for [NavigationDrawer].
@@ -40,6 +41,11 @@ enum Destination {
     "Node",
     icon: Icon(Icons.fluorescent_outlined),
     selectedIcon: Icon(Icons.fluorescent_rounded),
+  ),
+  animated(
+    "Animated",
+    icon: Icon(Icons.animation_outlined),
+    selectedIcon: Icon(Icons.animation_rounded),
   ),
   alignment(
     "Alignment",
@@ -168,17 +174,18 @@ class _NavigationDrawerAppState extends State<NavigationDrawerApp> {
             navigationDrawerTheme: NavigationDrawerThemeData(tileHeight: 36),
           ),
           routes: {
-            Destination.simpleMenu.route: _page(const SimpleMenuExample()),
-            Destination.contextMenu.route: _page(const ContextMenuExample()),
+            Destination.simpleMenu.route: _page(const SimpleMenuApp()),
+            Destination.contextMenu.route: _page(const ContextMenuApp()),
             Destination.overlayBuilder.route:
                 _page(const MenuOverlayBuilderApp()),
-            Destination.nodeMenu.route: _page(const MenuNodeExample()),
+            Destination.nodeMenu.route: _page(const MenuNodeApp()),
             Destination.alignment.route: _page(const AlignmentExample()),
             Destination.padding.route: _page(const PaddingExample()),
             Destination.menuAnchor.route: _page(const MenuAnchorExample()),
             Destination.menuAnchorPaddingBug.route:
                 _page(const MenuAnchorPaddingBugExample()),
             Destination.dropdownMenu.route: _page(const DropdownMenuExample()),
+            Destination.animated.route: _page(const AnimatedMenuApp()),
           },
           home: _page(SimpleMenuExample())(context),
         ));

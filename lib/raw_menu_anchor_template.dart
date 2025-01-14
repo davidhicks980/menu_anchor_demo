@@ -128,11 +128,13 @@ class _DevelopmentTemplateState extends State<DevelopmentTemplate> {
               ),
               child: RawMenuAnchor(
                 controller: controller,
-                menuChildren: widget.buildChildren(
-                  context,
-                  anchorAlignment,
-                  menuAlignment,
-                  offset,
+                panel: RawMenuPanel(
+                  menuChildren: widget.buildChildren(
+                    context,
+                    anchorAlignment,
+                    menuAlignment,
+                    offset,
+                  ),
                 ),
                 child: AnchorButton.small(
                   const Text("Anchor"),
