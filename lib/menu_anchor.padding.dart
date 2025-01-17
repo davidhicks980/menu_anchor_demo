@@ -33,7 +33,7 @@ List<Widget> buildChildren(
       menuChildren: [
         for (int index = 0; index < 4; index++)
           DecoratedBox(
-            decoration: (RawMenuPanel as BoxDecoration)
+            decoration: (RawMenuPanel.lightSurfaceDecoration as BoxDecoration)
                 .copyWith(borderRadius: BorderRadius.zero, boxShadow: []),
             child: Button.text(
               "Sub" * (depth + 1) + 'menu Item $depth.${index + 1}',

@@ -222,12 +222,15 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample>
   bool disposeNavigationDrawer = false;
 
   int get _selectedIndex => Destination.values.indexOf(
-      Destination.findByRoute(ModalRoute.of(context)!.settings.name ?? "") ??
-          Destination.simpleMenu);
+        Destination.findByRoute(ModalRoute.of(context)!.settings.name ?? "") ??
+            Destination.simpleMenu,
+      );
 
   void handleScreenChanged(int selectedScreen) {
     Navigator.pushReplacementNamed(
-        context, Destination.values[selectedScreen].route);
+      context,
+      Destination.values[selectedScreen].route,
+    );
   }
 
   void toggleDrawer() {

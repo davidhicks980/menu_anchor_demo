@@ -31,7 +31,7 @@ List<Widget> buildChildren(
             border: Border.fromBorderSide(BorderSide(color: Color(0x63000000))),
           ),
           constraints: const BoxConstraints(minWidth: 125),
-          padding: const EdgeInsets.symmetric(vertical: 5),
+          padding: const EdgeInsetsDirectional.fromSTEB(33, 45, 15, 27),
           menuChildren: [
             for (int index = 0; index < 4; index++)
               DecoratedBox(
